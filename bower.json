@@ -1,0 +1,34 @@
+{
+  "name": "angular-pickadate-zalari",
+  "version": "0.1.0",
+  "homepage": "https://github.com/zalari/angular-pickadate.js",
+  "authors": [
+    "Mikhail Temkine",
+    "Christian Ulbrich (Zalari UG haftungsbeschraenkt) christian.ulbrich@zalari.de"
+  ],
+  "description": "Angular 1.2+ directive for pickadata.js",
+  "main": "angular-pickadate.js",
+  "keywords": [
+    "angular",
+    "angularjs",
+    "pickadate",
+    "pickatime",
+    "datepicker",
+    "timepicker",
+      "pickadate.js"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+      "angular":"~1.2.0",
+      "pickadate":"3.4.0"
+
+  }
+}
