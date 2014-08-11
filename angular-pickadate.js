@@ -4,12 +4,12 @@ angular.module('ng').directive('zaPickADate', function () {
         restrict: "A",
         scope: {
             zaPickADate: '=',
-            minDate: '=',
-            maxDate: '=',
-			pickADateOptions: '='
+            zaMinDate: '=',
+            zaMaxDate: '=',
+			zaPickADateOptions: '='
         },
         link: function (scope, element, attrs) {
-			var options = $.extend(scope.pickADateOptions || {}, {
+			var options = $.extend(scope.zaPickADateOptions || {}, {
 				onSet: function (e) {
                     if (scope.$$phase || scope.$root.$$phase) // we are coming from $watch or link setup
                         return;
@@ -47,17 +47,17 @@ angular.module('ng').directive('zaPickADate', function () {
                 }
             }
             updateValue(scope.zaPickADate);
-            element.pickadate('picker').set('min', scope.minDate ? scope.minDate : false);
-            element.pickadate('picker').set('max', scope.maxDate ? scope.maxDate : false);
+            element.pickadate('picker').set('min', scope.zaMinDate ? scope.zaMinDate : false);
+            element.pickadate('picker').set('max', scope.zaMaxDate ? scope.zaMaxDate : false);
             scope.$watch('zaPickADate', function (newValue, oldValue) {
                 if (newValue == oldValue)
                     return;
                 updateValue(newValue);
             }, true);
-            scope.$watch('minDate', function (newValue, oldValue) {
+            scope.$watch('zaMinDate', function (newValue, oldValue) {
                 element.pickadate('picker').set('min', newValue ? newValue : false);
             }, true);
-            scope.$watch('maxDate', function (newValue, oldValue) {
+            scope.$watch('zaMaxDate', function (newValue, oldValue) {
                 element.pickadate('picker').set('max', newValue ? newValue : false);
             }, true);
         }
@@ -70,12 +70,12 @@ angular.module('ng').directive('zaPickATime', function () {
         restrict: "A",
         scope: {
             zaPickATime: '=',
-			pickATimeOptions: '=',
+			zaPickATimeOptions: '=',
             zaMinTime: '=',
             zaMaxTime: '='
         },
         link: function (scope, element, attrs) {
-			var options = $.extend(scope.pickATimeOptions || {}, {
+			var options = $.extend(scope.zaPickATimeOptions || {}, {
 				onSet: function (e) {
                     if (scope.$$phase || scope.$root.$$phase) // we are coming from $watch or link setup
                         return;
