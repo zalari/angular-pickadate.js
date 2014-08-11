@@ -70,7 +70,9 @@ angular.module('ng').directive('zaPickATime', function () {
         restrict: "A",
         scope: {
             zaPickATime: '=',
-			pickATimeOptions: '='
+			pickATimeOptions: '=',
+            zaMinTime: '=',
+            zaMaxTime: '='
         },
         link: function (scope, element, attrs) {
 			var options = $.extend(scope.pickATimeOptions || {}, {
@@ -111,11 +113,23 @@ angular.module('ng').directive('zaPickATime', function () {
                 }
             }
             updateValue(scope.zaPickATime);
+            //process minTime + maxTime attributes
+            element.pickatime('picker').set('min', scope.zaMinTime ? scope.zaMinTime : false);
+            element.pickatime('picker').set('max', scope.zaMaxTime ? scope.zaMaxTime: false);
+            //Watcher for 2-way data binding for directive itself
             scope.$watch('zaPickATime', function (newValue, oldValue) {
                 if (newValue == oldValue)
                     return;
                 updateValue(newValue);
             }, true);
+            //additional watches for the minTime and maxTime attributes
+            scope.$watch('zaMinTime', function (newValue, oldValue) {
+                element.pickatime('picker').set('min', newValue ? newValue : false);
+            }, true);
+            scope.$watch('zaMaxTime', function (newValue, oldValue) {
+                element.pickatime('picker').set('max', newValue ? newValue : false);
+            }, true);
+
         }
     };
 });
