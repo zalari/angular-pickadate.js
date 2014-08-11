@@ -3,7 +3,7 @@ angular.module('ng').directive('zaPickADate', function () {
     return {
         restrict: "A",
         scope: {
-            pickADate: '=',
+            zaPickADate: '=',
             minDate: '=',
             maxDate: '=',
 			pickADateOptions: '='
@@ -16,19 +16,19 @@ angular.module('ng').directive('zaPickADate', function () {
                     var select = element.pickadate('picker').get('select'); // selected date
                     scope.$apply(function () {
                         if (e.hasOwnProperty('clear')) {
-                            scope.pickADate = null;
+                            scope.zaPickADate = null;
                             return;
                         }
-                        if (!scope.pickADate)
-                            scope.pickADate = new Date(0);
-                        scope.pickADate.setYear(select.obj.getFullYear());
+                        if (!scope.zaPickADate)
+                            scope.zaPickADate = new Date(0);
+                        scope.zaPickADate.setYear(select.obj.getFullYear());
                         // Interesting: getYear returns only since 1900. Use getFullYear instead.
 						// It took me half a day to figure that our. Ironically setYear()
 						// (not setFullYear, duh) accepts the actual year A.D.
                         // So as I got the $#%^ 114 and set it, guess what, I was transported to ancient Rome 114 A.D.
                         // That's it I'm done being a programmer, I'd rather go serve Emperor Trajan as a sex slave.
-                        scope.pickADate.setMonth(select.obj.getMonth());
-                        scope.pickADate.setDate(select.obj.getDate());
+                        scope.zaPickADate.setMonth(select.obj.getMonth());
+                        scope.zaPickADate.setDate(select.obj.getDate());
                     });
                 },
                 onClose: function () {
@@ -38,18 +38,18 @@ angular.module('ng').directive('zaPickADate', function () {
             element.pickadate(options);
             function updateValue(newValue) {
                 if (newValue) {
-                    scope.pickADate = (newValue instanceof Date) ? newValue : new Date(newValue);
+                    scope.zaPickADate = (newValue instanceof Date) ? newValue : new Date(newValue);
                     // needs to be in milliseconds
-                    element.pickadate('picker').set('select', scope.pickADate.getTime());
+                    element.pickadate('picker').set('select', scope.zaPickADate.getTime());
                 } else {
                     element.pickadate('picker').clear();
-                    scope.pickADate = null;
+                    scope.zaPickADate = null;
                 }
             }
-            updateValue(scope.pickADate);
+            updateValue(scope.zaPickADate);
             element.pickadate('picker').set('min', scope.minDate ? scope.minDate : false);
             element.pickadate('picker').set('max', scope.maxDate ? scope.maxDate : false);
-            scope.$watch('pickADate', function (newValue, oldValue) {
+            scope.$watch('zaPickADate', function (newValue, oldValue) {
                 if (newValue == oldValue)
                     return;
                 updateValue(newValue);
@@ -69,7 +69,7 @@ angular.module('ng').directive('zaPickATime', function () {
     return {
         restrict: "A",
         scope: {
-            pickATime: '=',
+            zaPickATime: '=',
 			pickATimeOptions: '='
         },
         link: function (scope, element, attrs) {
@@ -83,15 +83,15 @@ angular.module('ng').directive('zaPickATime', function () {
                             scope.pickATime = null;
                             return;
                         }
-                        if (!scope.pickATime)
-                            scope.pickATime = new Date(0);
+                        if (!scope.zaPickATime)
+                            scope.zaPickATime = new Date(0);
                         // (attrs.setUtc)
-                            // ? scope.pickATime.setUTCHours(select.hour)
-                            // : scope.pickATime.setHours(select.hour);
-                        scope.pickATime.setHours(select.hour);
-                        scope.pickATime.setMinutes(select.mins);
-                        scope.pickATime.setSeconds(0);
-                        scope.pickATime.setMilliseconds(0);
+                            // ? scope.zaPickATime.setUTCHours(select.hour)
+                            // : scope.zaPickATime.setHours(select.hour);
+                        scope.zaPickATime.setHours(select.hour);
+                        scope.zaPickATime.setMinutes(select.mins);
+                        scope.zaPickATime.setSeconds(0);
+                        scope.zaPickATime.setMilliseconds(0);
                     });
                 },
                 onClose: function () {
@@ -101,17 +101,17 @@ angular.module('ng').directive('zaPickATime', function () {
             element.pickatime(options);
             function updateValue(newValue) {
                 if (newValue) {
-                    scope.pickATime = (newValue instanceof Date) ? newValue : new Date(newValue);
+                    scope.zaPickATime = (newValue instanceof Date) ? newValue : new Date(newValue);
                     // needs to be in minutes
-                    var totalMins = scope.pickATime.getHours() * 60 + scope.pickATime.getMinutes();
+                    var totalMins = scope.zaPickATime.getHours() * 60 + scope.zaPickATime.getMinutes();
                     element.pickatime('picker').set('select', totalMins);
                 } else {
                     element.pickatime('picker').clear();
-                    scope.pickATime = null;
+                    scope.zaPickATime = null;
                 }
             }
-            updateValue(scope.pickATime);
-            scope.$watch('pickATime', function (newValue, oldValue) {
+            updateValue(scope.zaPickATime);
+            scope.$watch('zaPickATime', function (newValue, oldValue) {
                 if (newValue == oldValue)
                     return;
                 updateValue(newValue);
