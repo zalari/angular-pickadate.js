@@ -21,14 +21,17 @@ angular.module('ng').directive('zaPickADate', function () {
                         }
                         if (!scope.zaPickADate)
                             scope.zaPickADate = new Date(0);
-                        scope.zaPickADate.setYear(select.obj.getFullYear());
+                        //HACK: create always a new object, to properly trigger an angular-watch
+                        var tempDate = new Date(scope.zaPickADate.getTime());
                         // Interesting: getYear returns only since 1900. Use getFullYear instead.
-						// It took me half a day to figure that our. Ironically setYear()
-						// (not setFullYear, duh) accepts the actual year A.D.
+                        // It took me half a day to figure that our. Ironically setYear()
+                        // (not setFullYear, duh) accepts the actual year A.D.
                         // So as I got the $#%^ 114 and set it, guess what, I was transported to ancient Rome 114 A.D.
                         // That's it I'm done being a programmer, I'd rather go serve Emperor Trajan as a sex slave.
-                        scope.zaPickADate.setMonth(select.obj.getMonth());
-                        scope.zaPickADate.setDate(select.obj.getDate());
+                        tempDate.setYear(select.obj.getFullYear());
+                        tempDate.setMonth(select.obj.getMonth());
+                        tempDate.setDate(select.obj.getDate());
+                        scope.zaPickADate = tempDate;
                     });
                 },
                 onClose: function () {
@@ -87,13 +90,16 @@ angular.module('ng').directive('zaPickATime', function () {
                         }
                         if (!scope.zaPickATime)
                             scope.zaPickATime = new Date(0);
+                        var tempTime = new Date(scope.zaPickATime.getTime());
+                        //HACK: always create a new date object, thus angularjs watches get triggered
                         // (attrs.setUtc)
-                            // ? scope.zaPickATime.setUTCHours(select.hour)
-                            // : scope.zaPickATime.setHours(select.hour);
-                        scope.zaPickATime.setHours(select.hour);
-                        scope.zaPickATime.setMinutes(select.mins);
-                        scope.zaPickATime.setSeconds(0);
-                        scope.zaPickATime.setMilliseconds(0);
+                        // ? scope.zaPickATime.setUTCHours(select.hour)
+                        // : scope.zaPickATime.setHours(select.hour);
+                        tempTime.setHours(select.hour);
+                        tempTime.setMinutes(select.mins);
+                        tempTime.setSeconds(0);
+                        tempTime.setMilliseconds(0);
+                        scope.zaPickATime = tempTime;
                     });
                 },
                 onClose: function () {
