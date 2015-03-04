@@ -143,9 +143,7 @@ angular.module('ng').directive('zaPickATime', function () {
             }, true);
 
             scope.$watch('zaDisabledTimes', function (newValue, oldValue) {
-                if (newValue !== oldValue) {
-                    element.pickatime('picker').set('disabled', newValue ? newValue : []);
-                }
+                element.pickatime('picker').set('disable', newValue ? newValue : []);
             }, true);
 
         }
