@@ -75,10 +75,12 @@ angular.module('ng').directive('zaPickATime', function () {
             zaPickATime: '=',
 			zaPickATimeOptions: '=',
             zaMinTime: '=',
-            zaMaxTime: '='
+            zaMaxTime: '=',
+            zaDisabledTimes: '='
         },
         link: function (scope, element, attrs) {
-			var options = $.extend(scope.zaPickATimeOptions || {}, {
+
+            var options = $.extend(scope.zaPickATimeOptions || {}, {
 				onSet: function (e) {
                     if (scope.$$phase || scope.$root.$$phase) // we are coming from $watch or link setup
                         return;
@@ -106,6 +108,7 @@ angular.module('ng').directive('zaPickATime', function () {
                     element.blur();
                 }
 			});
+
             element.pickatime(options);
             function updateValue(newValue) {
                 if (newValue) {
@@ -118,6 +121,7 @@ angular.module('ng').directive('zaPickATime', function () {
                     scope.zaPickATime = null;
                 }
             }
+
             updateValue(scope.zaPickATime);
             //process minTime + maxTime attributes
             element.pickatime('picker').set('min', scope.zaMinTime ? scope.zaMinTime : false);
@@ -128,12 +132,18 @@ angular.module('ng').directive('zaPickATime', function () {
                     return;
                 updateValue(newValue);
             }, true);
-            //additional watches for the minTime and maxTime attributes
+
+            //additional watches
             scope.$watch('zaMinTime', function (newValue, oldValue) {
                 element.pickatime('picker').set('min', newValue ? newValue : false);
             }, true);
+
             scope.$watch('zaMaxTime', function (newValue, oldValue) {
                 element.pickatime('picker').set('max', newValue ? newValue : false);
+            }, true);
+
+            scope.$watch('zaDisabledTimes', function (newValue, oldValue) {
+                element.pickatime('picker').set('disable', newValue ? newValue : []);
             }, true);
 
         }
