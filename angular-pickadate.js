@@ -3,14 +3,14 @@ angular.module('ng').directive('zaPickADate', function () {
     return {
         restrict: "A",
         scope: {
-            zaPickADate: '=',
+            zaPickADate: '=ngModel', // Use the model to have parent forms update their dirty and such states
             zaMinDate: '=',
             zaMaxDate: '=',
-			zaPickADateOptions: '='
+            zaPickADateOptions: '='
         },
         link: function (scope, element, attrs) {
-			var options = $.extend(scope.zaPickADateOptions || {}, {
-				onSet: function (e) {
+            var options = $.extend(scope.zaPickADateOptions || {}, {
+                onSet: function (e) {
                     if (scope.$$phase || scope.$root.$$phase) // we are coming from $watch or link setup
                         return;
                     var select = element.pickadate('picker').get('select'); // selected date
@@ -37,7 +37,7 @@ angular.module('ng').directive('zaPickADate', function () {
                 onClose: function () {
                     element.blur();
                 }
-			});
+            });
             element.pickadate(options);
             function updateValue(newValue) {
                 if (newValue) {
@@ -72,8 +72,8 @@ angular.module('ng').directive('zaPickATime', function () {
     return {
         restrict: "A",
         scope: {
-            zaPickATime: '=',
-			zaPickATimeOptions: '=',
+            zaPickATime: '=ngModel', // Use the model to have parent forms update their dirty and such states
+            zaPickATimeOptions: '=',
             zaMinTime: '=',
             zaMaxTime: '=',
             zaDisabledTimes: '='
@@ -81,7 +81,7 @@ angular.module('ng').directive('zaPickATime', function () {
         link: function (scope, element, attrs) {
 
             var options = $.extend(scope.zaPickATimeOptions || {}, {
-				onSet: function (e) {
+                onSet: function (e) {
                     if (scope.$$phase || scope.$root.$$phase) // we are coming from $watch or link setup
                         return;
                     var select = element.pickatime('picker').get('select'); // selected date
@@ -107,7 +107,7 @@ angular.module('ng').directive('zaPickATime', function () {
                 onClose: function () {
                     element.blur();
                 }
-			});
+            });
 
             element.pickatime(options);
             function updateValue(newValue) {
