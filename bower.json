@@ -27,8 +27,8 @@
     "tests"
   ],
   "dependencies": {
-      "angular":"~1.2.0",
-      "pickadate":"3.5.3"
+      "angular":">=1.2.0",
+      "pickadate":">=3.5.3"
 
   }
 }
