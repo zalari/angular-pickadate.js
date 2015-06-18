@@ -1,5 +1,5 @@
 // pick-a-date (attribute)
-angular.module('zalari.pickadate.datepicker').directive('zaPickADate', function () {
+angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', function () {
     return {
         restrict: "A",
         scope: {
@@ -68,7 +68,7 @@ angular.module('zalari.pickadate.datepicker').directive('zaPickADate', function 
 });
 
 // pick-a-time (attribute)
-angular.module('zalari.pickadate.timepicker').directive('zaPickATime', function () {
+angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function () {
     return {
         restrict: "A",
         scope: {
