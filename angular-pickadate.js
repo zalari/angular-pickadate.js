@@ -1,5 +1,5 @@
 // pick-a-date (attribute)
-angular.module('ng').directive('zaPickADate', function () {
+angular.module('zalari').directive('zaPickADate', function () {
     return {
         restrict: "A",
         scope: {
