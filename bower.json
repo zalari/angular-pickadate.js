@@ -1,6 +1,6 @@
 {
   "name": "angular-pickadate-zalari",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "homepage": "https://github.com/zalari/angular-pickadate.js",
   "authors": [
     "Mikhail Temkine",
@@ -27,7 +27,7 @@
     "tests"
   ],
   "dependencies": {
-      "angular":">=1.2.0",
+      "angular":">=1.3.0",
       "pickadate":">=3.5.3"
 
   }
