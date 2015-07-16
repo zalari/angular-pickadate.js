@@ -1,17 +1,32 @@
 angular-pickadate.js
 ====================
 
-Angularjs extension for the slick date/time picker, [pickadate.js by Amsul](http://amsul.ca/pickadate.js/)
+AngularJS 1.3+ extension for the slick date/time picker, [pickadate.js by Amsul](http://amsul.ca/pickadate.js/)
 
-The use is very simple once you include this directive:
+The use is very simple once you require and load the directive this directive with something like:
+```
+...
 
-    <input type="text" za-pick-a-date="curDate" />
-    <input type="text" za-pick-a-time="curDate" />
+angular
+  .module('yourModule', [
+    'zalari.pickadate.datepicker',
+    'zalari.pickadate.timepicker'
+  ]);
+...
 
-I went over my head for you guys and added constraints for min/max. Here is how you can use them. Merry xmas!
+```
 
-    From: <input type="text" za-pick-a-date="startDate" max-date="endDate" />
-    To: <input type="text" za-pick-a-date="endDate" min-date="startDate" />
+You can use it like that:
+
+
+    <input type="text" za-pick-a-date ng-model="curDate" />
+    <input type="text" za-pick-a-time ng-model="curDate" />
+
+Additionaly minDate, maxDate for the datepicker and minTime, maxTime, disabledTime and the options as well are supported! Everything is prefixed with za- .
+
+    From: <input type="text" za-pick-a-date ng-model="startDate" za-max-date="endDate" />
+    To: <input type="text" za-pick-a-date ng-model="endDate" za-min-date="startDate" />
+    
 
 ### Options
 
@@ -26,10 +41,9 @@ Example:
 
 ### Notes
 
- - Version 0.3.0 breaks some things and enables AngularJS 1.3+ usage; you have to explicitly load this module now:
+ - Version 0.4.0 breaks everything (you have to use ng-model now!) and enables AngularJS 1.3+ usage; you have to explicitly load this module now:
     angular.module(yourModule,['zalari.pickadate.datepicker','zalari.pickadate.timepicker'])
  - For more information on the date filter in AngularJS please visit [http://docs.angularjs.org/api/ng/filter/date].
- - Watch out for UTC times. Apparently the default way AngularJS serializes your time is with the T…Z pattern, meaning it is the time in Greenwich. 
- - Documentation needs an overhaul... bear with us!
+ - Documentation needs an overhaul... bear with me!
 
-Here is the original blog post about this piece of code: [Coding Insight](http://www.codinginsight.com/angularjs-and-pickadate/)
+Inspired by the blog post on: [Coding Insight](http://www.codinginsight.com/angularjs-and-pickadate/)

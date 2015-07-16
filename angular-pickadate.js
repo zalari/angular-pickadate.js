@@ -3,66 +3,145 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
     return {
         restrict: "A",
         scope: {
-            zaPickADate: '=',
             zaMinDate: '=',
             zaMaxDate: '=',
-			zaPickADateOptions: '='
+            zaPickADateOptions: '='
         },
-        link: function (scope, element, attrs) {
-			var options = $.extend(scope.zaPickADateOptions || {}, {
-				onSet: function (e) {
-                    if (scope.$$phase || scope.$root.$$phase) // we are coming from $watch or link setup
-                        return;
-                    var select = element.pickadate('picker').get('select'); // selected date
-                    scope.$apply(function () {
-                        if (e.hasOwnProperty('clear')) {
-                            scope.zaPickADate = null;
-                            return;
-                        }
-                        if (!scope.zaPickADate)
-                            scope.zaPickADate = new Date(0);
-                        //HACK: create always a new object, to properly trigger an angular-watch
-                        var tempDate = new Date(scope.zaPickADate.getTime());
-                        // Interesting: getYear returns only since 1900. Use getFullYear instead.
-                        // It took me half a day to figure that our. Ironically setYear()
-                        // (not setFullYear, duh) accepts the actual year A.D.
-                        // So as I got the $#%^ 114 and set it, guess what, I was transported to ancient Rome 114 A.D.
-                        // That's it I'm done being a programmer, I'd rather go serve Emperor Trajan as a sex slave.
-                        tempDate.setYear(select.obj.getFullYear());
-                        tempDate.setMonth(select.obj.getMonth());
-                        tempDate.setDate(select.obj.getDate());
-                        scope.zaPickADate = tempDate;
-                    });
-                },
-                onClose: function () {
-                    element.blur();
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModelController) {
+
+            var _internalDate = {};
+            var _initial = true;
+
+            //helper functions
+            var _registerWatches = function() {
+
+                //register watches for optional arguments... and update picker accordingly
+                scope.$watch('zaMinDate', function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        element.pickadate('picker').set('min', newValue ? newValue : false);
+                    }
+                }, true);
+
+                scope.$watch('zaMaxDate', function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        element.pickadate('picker').set('max', newValue ? newValue : false);
+                    }
+                }, true);
+            };
+
+            //we need to update the value for the angular side of thing, through ngModelController
+            //aka this is updateAngularValue
+            var _dateParser = function (viewValue) {
+                //initially we have to set the control to pristine; but only once
+                //furthermore do not reflect the first update back...
+                if (_initial) {
+                    ngModelController.$setPristine();
+                    //ngModelController.$rollbackViewValue();
+                    _initial = false;
                 }
-			});
-            element.pickadate(options);
-            function updateValue(newValue) {
+
+                //we get the new viewValue and we need to convert it to the real js date back...
+                //if the viewValue is empty, we assume, that date needs to be cleared
+                if (viewValue.length === 0) {
+                    return null;
+                } else {
+                    var selectedDate = element.pickadate('picker').get('select').obj;
+
+                    //when the initial date has been undefined; then create a new date
+                    //otherwise update the old value
+                    if (angular.isUndefined(_internalDate)){
+                        _internalDate = new Date();
+                    }
+
+                    _internalDate.setYear(selectedDate.getFullYear());
+                    _internalDate.setMonth(selectedDate.getMonth());
+                    _internalDate.setDate(selectedDate.getDate());
+
+                    return _internalDate;
+                }
+
+            };
+
+            //setup picker, i.e. pass options
+            var _setupPicker = function() {
+
+                //N.B: this is not a deep copy...
+                var options = angular.extend(scope.zaPickADateOptions || {}, {
+
+                    //set handler; a date has been selected for the datepicker
+                    onSet: function (e) {
+
+                        //we do not use this hook anymore, because the parser pipeline
+                        //is invoked, whenever the value of the input itself is changed
+
+                        // we are coming from $watch or link setup; so exit
+                        //TODO: figure out, why onSet is triggered during those phases
+                        /*if (scope.$$phase || scope.$root.$$phase) {
+                         return;
+                         }*/
+
+                    },
+
+                    //close handler
+                    onClose: function () {
+                        element.blur();
+                    }
+                });
+
+                //set options on element
+                element.pickadate(options);
+            };
+
+            //helper for angular -> datepicker
+            var _updatePickerValue = function(newValue) {
                 if (newValue) {
-                    scope.zaPickADate = (newValue instanceof Date) ? newValue : new Date(newValue);
                     // needs to be in milliseconds
-                    element.pickadate('picker').set('select', scope.zaPickADate.getTime());
+                    element.pickadate('picker').set('select', newValue.getTime());
                 } else {
                     element.pickadate('picker').clear();
-                    scope.zaPickADate = null;
                 }
-            }
-            updateValue(scope.zaPickADate);
-            element.pickadate('picker').set('min', scope.zaMinDate ? scope.zaMinDate : false);
-            element.pickadate('picker').set('max', scope.zaMaxDate ? scope.zaMaxDate : false);
-            scope.$watch('zaPickADate', function (newValue, oldValue) {
-                if (newValue == oldValue)
-                    return;
-                updateValue(newValue);
-            }, true);
-            scope.$watch('zaMinDate', function (newValue, oldValue) {
-                element.pickadate('picker').set('min', newValue ? newValue : false);
-            }, true);
-            scope.$watch('zaMaxDate', function (newValue, oldValue) {
-                element.pickadate('picker').set('max', newValue ? newValue : false);
-            }, true);
+
+            };
+
+            var _init = function() {
+
+                _setupPicker();
+
+                //only update on blur; this prevents the watchers from
+                //firing, when the model gets externally set
+                /*ngModelController.$options = {
+                 updateOn : 'blur',
+                 debounce : 10
+                 };*/
+
+                //overwrite the $render method of ngModelController
+                ngModelController.$render = function() {
+                    //we get called, whenever the external model changes...
+                    //copy it to internal date;
+                    //because in Angular 1.3+ $viewValue are always strings
+                    //-> https://github.com/angular/angular.js/commit/1eda18365a348c9597aafba9d195d345e4f13d1e
+                    //-> https://github.com/angular-ui/bootstrap/issues/2659
+                    //we need to actually re-create a real Date; when it is null / undefined, let it be undefined / null
+                    _internalDate = (ngModelController.$viewValue ? new Date(ngModelController.$viewValue) : undefined);
+                    //_internalDate = ngModelController.$modelValue;
+                    _updatePickerValue(_internalDate);
+                };
+
+                ngModelController.$parsers.push(_dateParser);
+
+                //set additional options on element
+                element.pickadate('picker').set('min', scope.zaMinDate ? scope.zaMinDate : false);
+                element.pickadate('picker').set('max', scope.zaMaxDate ? scope.zaMaxDate : false);
+
+                //register watches
+                _registerWatches();
+
+            };
+
+
+            _init();
+
         }
     };
 });
@@ -70,81 +149,138 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 // pick-a-time (attribute)
 angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function () {
     return {
-        restrict: "A",
+        restrict: 'A',
         scope: {
-            zaPickATime: '=',
-			zaPickATimeOptions: '=',
+            zaPickATimeOptions: '=',
             zaMinTime: '=',
             zaMaxTime: '=',
             zaDisabledTimes: '='
         },
-        link: function (scope, element, attrs) {
+        require : 'ngModel',
+        link: function (scope, element, attrs, ngModelController) {
 
-            var options = $.extend(scope.zaPickATimeOptions || {}, {
-				onSet: function (e) {
-                    if (scope.$$phase || scope.$root.$$phase) // we are coming from $watch or link setup
-                        return;
-                    var select = element.pickatime('picker').get('select'); // selected date
-                    scope.$apply(function () {
-                        if (e.hasOwnProperty('clear')) {
-                            scope.pickATime = null;
-                            return;
-                        }
-                        if (!scope.zaPickATime)
-                            scope.zaPickATime = new Date(0);
-                        var tempTime = new Date(scope.zaPickATime.getTime());
-                        //HACK: always create a new date object, thus angularjs watches get triggered
-                        // (attrs.setUtc)
-                        // ? scope.zaPickATime.setUTCHours(select.hour)
-                        // : scope.zaPickATime.setHours(select.hour);
-                        tempTime.setHours(select.hour);
-                        tempTime.setMinutes(select.mins);
-                        tempTime.setSeconds(0);
-                        tempTime.setMilliseconds(0);
-                        scope.zaPickATime = tempTime;
-                    });
-                },
-                onClose: function () {
-                    element.blur();
-                }
-			});
+            var _initial = true;
+            var _internalDate = {};
 
-            element.pickatime(options);
-            function updateValue(newValue) {
+            //helper functions
+
+            var _registerWatches = function() {
+                scope.$watch('zaMinTime', function (newValue, oldValue) {
+                    element.pickatime('picker').set('min', newValue ? newValue : false);
+                }, true);
+
+                scope.$watch('zaMaxTime', function (newValue, oldValue) {
+                    element.pickatime('picker').set('max', newValue ? newValue : false);
+                }, true);
+
+                scope.$watch('zaDisabledTimes', function (newValue, oldValue) {
+                    element.pickatime('picker').set('disable', newValue ? newValue : []);
+                }, true);
+            };
+
+            var _setupTimePicker = function() {
+                var options = angular.extend(scope.zaPickATimeOptions || {}, {
+                    onSet: function (e) {
+
+                        //we do not use this hook anymore, because the parser pipeline
+                        //is invoked, whenever the value of the input itself is changed
+
+                        // we are coming from $watch or link setup; so exit
+                        //TODO: figure out, why onSet is triggered during those phases
+                        /*if (scope.$$phase || scope.$root.$$phase) {
+                         return;
+                         }*/
+
+
+                    },
+                    onClose: function () {
+                        element.blur();
+                    }
+                });
+
+                element.pickatime(options);
+
+            };
+
+            var _updatePickerValue = function(newValue) {
                 if (newValue) {
-                    scope.zaPickATime = (newValue instanceof Date) ? newValue : new Date(newValue);
                     // needs to be in minutes
-                    var totalMins = scope.zaPickATime.getHours() * 60 + scope.zaPickATime.getMinutes();
+                    var totalMins = newValue.getHours() * 60 + newValue.getMinutes();
                     element.pickatime('picker').set('select', totalMins);
                 } else {
                     element.pickatime('picker').clear();
-                    scope.zaPickATime = null;
                 }
-            }
+            };
 
-            updateValue(scope.zaPickATime);
-            //process minTime + maxTime attributes
-            element.pickatime('picker').set('min', scope.zaMinTime ? scope.zaMinTime : false);
-            element.pickatime('picker').set('max', scope.zaMaxTime ? scope.zaMaxTime: false);
-            //Watcher for 2-way data binding for directive itself
-            scope.$watch('zaPickATime', function (newValue, oldValue) {
-                if (newValue == oldValue)
-                    return;
-                updateValue(newValue);
-            }, true);
+            //parser for parsing the timestring "04:00" to actually set the ngModel
+            //to propagate changes back to angular...
+            var _timeParser = function(viewValue) {
 
-            //additional watches
-            scope.$watch('zaMinTime', function (newValue, oldValue) {
-                element.pickatime('picker').set('min', newValue ? newValue : false);
-            }, true);
+                //initially we have to set the control to pristine; but only once
+                if (_initial) {
+                    ngModelController.$setPristine();
+                    _initial = false;
+                }
 
-            scope.$watch('zaMaxTime', function (newValue, oldValue) {
-                element.pickatime('picker').set('max', newValue ? newValue : false);
-            }, true);
+                //we get the new viewValue and we need to convert it to the real js date back...
+                //if the viewValue is empty, we assume, that date needs to be cleared
+                if (viewValue.length === 0) {
+                    return null;
+                } else {
+                    var selected = element.pickatime('picker').get('select');
 
-            scope.$watch('zaDisabledTimes', function (newValue, oldValue) {
-                element.pickatime('picker').set('disable', newValue ? newValue : []);
-            }, true);
+                    //when the initial date has been undefined; then create a new date
+                    //otherwise update the old value
+                    if (angular.isUndefined(_internalDate)){
+                        _internalDate = new Date();
+                    }
+
+                    _internalDate.setHours(selected.hour);
+                    _internalDate.setMinutes(selected.mins);
+
+                    return _internalDate;
+                }
+            };
+
+
+
+            var _init = function() {
+                _setupTimePicker();
+
+                //only update on blur; this prevents the watchers from
+                //firing, when the model gets externally set
+                /*ngModelController.$options = {
+                    updateOn : 'blur',
+                    debounce : 0
+                };*/
+
+                //we need to overwrite the ngModel.Render to make it work...
+
+                ngModelController.$render = function() {
+                    //we get called, whenever the external model changes...
+                    //copy it to internal date;
+                    //because in Angular 1.3+ $viewValue are always strings
+                    //-> https://github.com/angular/angular.js/commit/1eda18365a348c9597aafba9d195d345e4f13d1e
+                    //-> https://github.com/angular-ui/bootstrap/issues/2659
+                    //we need to actually re-create a real Date; when it is null / undefined, let it be undefined / null
+                    _internalDate = (ngModelController.$viewValue ? new Date(ngModelController.$viewValue) : undefined);
+                    //_internalDate = ngModelController.$modelValue;
+                    _updatePickerValue(_internalDate);
+
+                };
+
+                //process minTime + maxTime attributes
+                element.pickatime('picker').set('min', scope.zaMinTime ? scope.zaMinTime : false);
+                element.pickatime('picker').set('max', scope.zaMaxTime ? scope.zaMaxTime : false);
+
+                //add parser
+                ngModelController.$parsers.push(_timeParser);
+
+
+                _registerWatches();
+            };
+
+            _init();
 
         }
     };
