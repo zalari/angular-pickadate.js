@@ -1,5 +1,5 @@
 // pick-a-date (attribute)
-angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', function ($log, $timeout) {
+angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', function () {
     return {
         restrict: "A",
         scope: {
@@ -19,14 +19,12 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
                 //register watches for optional arguments... and update picker accordingly
                 scope.$watch('zaMinDate', function (newValue, oldValue) {
                     if (newValue !== oldValue) {
-                        $log.debug('adjust zaMinDate');
                         element.pickadate('picker').set('min', newValue ? newValue : false);
                     }
                 }, true);
 
                 scope.$watch('zaMaxDate', function (newValue, oldValue) {
                     if (newValue !== oldValue) {
-                        $log.debug('adjust zaMaxDate');
                         element.pickadate('picker').set('max', newValue ? newValue : false);
                     }
                 }, true);
@@ -35,9 +33,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
             //we need to update the value for the angular side of thing, through ngModelController
             //aka this is updateAngularValue
             var _dateParser = function (viewValue) {
-                $log.debug('parser triggered');
-                $log.debug('current view value: %O', viewValue);
-
                 //initially we have to set the control to pristine; but only once
                 //furthermore do not reflect the first update back...
                 if (_initial) {
@@ -100,7 +95,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
             //helper for angular -> datepicker
             var _updatePickerValue = function(newValue) {
-                $log.debug('updating the picker from angular...');
                 if (newValue) {
                     // needs to be in milliseconds
                     element.pickadate('picker').set('select', newValue.getTime());
@@ -153,7 +147,7 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 });
 
 // pick-a-time (attribute)
-angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function ($log) {
+angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function () {
     return {
         restrict: 'A',
         scope: {
@@ -221,8 +215,6 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
             //parser for parsing the timestring "04:00" to actually set the ngModel
             //to propagate changes back to angular...
             var _timeParser = function(viewValue) {
-                $log.debug('value should be updated for angular...');
-                $log.debug('current: %O', viewValue);
 
                 //initially we have to set the control to pristine; but only once
                 if (_initial) {
@@ -257,10 +249,10 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
 
                 //only update on blur; this prevents the watchers from
                 //firing, when the model gets externally set
-                ngModelController.$options = {
+                /*ngModelController.$options = {
                     updateOn : 'blur',
                     debounce : 0
-                };
+                };*/
 
                 //we need to overwrite the ngModel.Render to make it work...
 
