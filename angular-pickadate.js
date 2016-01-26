@@ -1,7 +1,8 @@
 // pick-a-date (attribute)
 angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', function () {
   return {
-    restrict: "A",
+    restrict: 'E',
+    template: '<input type="text" ng-model="pickdate" />',
     scope: {
       zaMinDate: '=',
       zaMaxDate: '=',
@@ -107,6 +108,7 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
       var _init = function () {
 
+        element = element.find('input');
         _setupPicker();
 
 
