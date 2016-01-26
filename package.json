@@ -1,0 +1,35 @@
+{
+  "name": "@zalari/angular-pickadate.js",
+  "version": "0.5.0",
+  "description": "Angular 1.3+ directive for pickadate.js",
+  "main": "angular-pickadate.js",
+  "dependencies": {
+    "angular":">=1.3.0",
+    "pickadate":">=3.5.3"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zalari/angular-pickadate.js.git"
+  },
+  "keywords": [
+    "angular",
+    "angularjs",
+    "pickadate",
+    "pickatime",
+    "datepicker",
+    "timepicker",
+    "pickadate.js"
+  ],
+  "author": "Mikhail Temkine, Christian Ulbrich (Zalari UG haftungsbeschraenkt)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zalari/angular-pickadate.js/issues"
+  },
+  "homepage": "https://github.com/zalari/angular-pickadate.js#readme"
+}
