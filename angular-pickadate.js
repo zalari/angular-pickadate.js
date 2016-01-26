@@ -6,7 +6,8 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
     scope: {
       zaMinDate: '=',
       zaMaxDate: '=',
-      zaPickADateOptions: '='
+      zaPickADateOptions: '=',
+      pickDate: '=ngModel'
     },
     require: 'ngModel',
     link: function (scope, element, attrs, ngModelController) {
@@ -27,6 +28,13 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
         scope.$watch('zaMaxDate', function (newValue, oldValue) {
           if (newValue !== oldValue) {
             element.pickadate('picker').set('max', newValue ? newValue : false);
+          }
+        }, true);
+
+        scope.$watch('pickDate', function (newValue, oldValue) {
+          if (newValue !== oldValue) {
+            console.log('pickDate has been externally changed...: %O', ngModelController.$modelValue);
+            ngModelController.$render();
           }
         }, true);
 
@@ -163,7 +171,8 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
       zaPickATimeOptions: '=',
       zaMinTime: '=',
       zaMaxTime: '=',
-      zaDisabledTimes: '='
+      zaDisabledTimes: '=',
+      pickTime: '=ngModel'
     },
     require: 'ngModel',
     link: function (scope, element, attrs, ngModelController) {
@@ -184,6 +193,12 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
 
         scope.$watch('zaDisabledTimes', function (newValue, oldValue) {
           element.pickatime('picker').set('disable', newValue ? newValue : []);
+        }, true);
+
+        scope.$watch('pickTime', function (newValue, oldValue) {
+          if (newValue !== oldValue) {
+            ngModelController.$render();
+          }
         }, true);
       };
 
@@ -268,8 +283,8 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
           //-> https://github.com/angular/angular.js/commit/1eda18365a348c9597aafba9d195d345e4f13d1e
           //-> https://github.com/angular-ui/bootstrap/issues/2659
           //we need to actually re-create a real Date; when it is null / undefined, let it be undefined / null
-          _internalDate = (ngModelController.$viewValue ? new Date(ngModelController.$viewValue) : undefined);
-          //_internalDate = ngModelController.$modelValue;
+          //_internalDate = (ngModelController.$viewValue ? new Date(ngModelController.$viewValue) : undefined);
+          _internalDate = ngModelController.$modelValue;
           _updatePickerValue(_internalDate);
 
         };
