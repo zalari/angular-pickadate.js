@@ -35,6 +35,8 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
       //aka this is updateAngularValue
       var _dateParser = function (viewValue) {
 
+        console.log('Parser called; directive -> angular');
+
         //initially we have to set the control to pristine; but only once
         //furthermore do not reflect the first update back...
         if (_initial) {
@@ -48,7 +50,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
         if (viewValue.length === 0) {
           return null;
         } else {
-          var selectedDate = element.pickadate('picker').get('select').obj;
 
           //when the initial date has been undefined; then create a new date
           //otherwise update the old value
@@ -56,9 +57,9 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
             _internalDate = new Date();
           }
 
-          _internalDate.setYear(selectedDate.getFullYear());
-          _internalDate.setMonth(selectedDate.getMonth());
-          _internalDate.setDate(selectedDate.getDate());
+          _internalDate.setYear(viewValue.getFullYear());
+          _internalDate.setMonth(viewValue.getMonth());
+          _internalDate.setDate(viewValue.getDate());
 
           return _internalDate;
         }
@@ -82,6 +83,12 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
             if (scope.$$phase || scope.$root.$$phase) {
               return;
             }
+
+            console.log('Date has changed... we need to propagate it to the outside...');
+            var pickerDate = element.pickadate('picker').get('select').obj;
+            ngModelController.$setViewValue(pickerDate);
+
+
 
           },
 
