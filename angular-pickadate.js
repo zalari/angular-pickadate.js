@@ -84,11 +84,8 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
               return;
             }
 
-            console.log('Date has changed... we need to propagate it to the outside...');
             var pickerDate = element.pickadate('picker').get('select').obj;
             ngModelController.$setViewValue(pickerDate);
-
-
 
           },
 
@@ -153,7 +150,8 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 // pick-a-time (attribute)
 angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function () {
   return {
-    restrict: 'A',
+    template: '<input type="text" ng-model="picktime" />',
+    restrict: 'E',
     scope: {
       zaPickATimeOptions: '=',
       zaMinTime: '=',
@@ -195,6 +193,9 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
               return;
             }
 
+            var pickerDate = element.pickatime('picker').get('select');
+            ngModelController.$setViewValue(pickerDate);
+
 
           },
           onClose: function () {
@@ -231,7 +232,6 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
         if (viewValue.length === 0) {
           return null;
         } else {
-          var selected = element.pickatime('picker').get('select');
 
           //when the initial date has been undefined; then create a new date
           //otherwise update the old value
@@ -239,8 +239,8 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
             _internalDate = new Date();
           }
 
-          _internalDate.setHours(selected.hour);
-          _internalDate.setMinutes(selected.mins);
+          _internalDate.setHours(viewValue.hour);
+          _internalDate.setMinutes(viewValue.mins);
 
           return _internalDate;
         }
@@ -248,8 +248,9 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
 
 
       var _init = function () {
-        _setupTimePicker();
 
+        element = element.find('input');
+        _setupTimePicker();
 
         //we need to overwrite the ngModel.Render to make it work...
 

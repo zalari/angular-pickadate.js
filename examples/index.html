@@ -19,7 +19,8 @@
 <h1>Pick date and time</h1>
 <div ng-controller="testController">
 	Date: <za-pick-a-date ng-model="curDate"></za-pick-a-date><br/>
-	<!--Date_2: <input type="text" za-pick-a-date ng-model="curDate" ng-model-options="{updateOn:'blur', debounce:0}" /><br/>-->
+	Date_2: <za-pick-a-date ng-model="curDate"></za-pick-a-date><br/>
+	Time: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
 	<!--Time: <input type="text" za-pick-a-time="curDate" /><br/>-->
 	Result: <span>{{ curDate | date:'medium' }}</span><br/>
 	Set externally:
