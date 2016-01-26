@@ -1,12 +1,13 @@
 angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', function () {
   return {
     restrict: 'E',
-    template: '<input type="text" />',
+    template: '<input placeholder="{{placeholder}}" type="text" />',
     scope: {
       zaMinDate: '=',
       zaMaxDate: '=',
       zaPickADateOptions: '=',
-      pickDate: '=ngModel'
+      pickDate: '=ngModel',
+      placeholder: '@'
     },
     require: 'ngModel',
     link: function (scope, element, attrs, ngModelController) {
@@ -153,14 +154,15 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
 angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function () {
   return {
-    template: '<input type="text" />',
+    template: '<input placeholder="{{placeholder}}" type="text" />',
     restrict: 'E',
     scope: {
       zaPickATimeOptions: '=',
       zaMinTime: '=',
       zaMaxTime: '=',
       zaDisabledTimes: '=',
-      pickTime: '=ngModel'
+      pickTime: '=ngModel',
+      placeholde: '@'
     },
     require: 'ngModel',
     link: function (scope, element, attrs, ngModelController) {

@@ -10,7 +10,6 @@
 	<script type="text/javascript" src="../node_modules/pickadate/lib/picker.js"></script>
     <script type="text/javascript" src="../node_modules/pickadate/lib/picker.date.js"></script>
     <script type="text/javascript" src="../node_modules/pickadate/lib/picker.time.js"></script>
-	<script type="text/javascript" src="date.js"></script>
 	<script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
 	<script type="text/javascript" src="script.js"></script>
 	<script type="text/javascript" src="../angular-pickadate.js"></script>
@@ -19,7 +18,7 @@
 <h1>Pick date and time on the same ng-model and ng-required</h1>
 <form name="testForm">
 <div ng-controller="testController">
-	Date: <za-pick-a-date ng-model="curDate" ng-required="true"></za-pick-a-date><br/>
+	Date: <za-pick-a-date placeholder="Enter me" ng-model="curDate" ng-required="true"></za-pick-a-date><br/>
 	Date_2: <za-pick-a-date ng-model="curDate"></za-pick-a-date><br/>
 	Time: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
 	Time_2: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
