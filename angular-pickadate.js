@@ -33,7 +33,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
         scope.$watch('pickDate', function (newValue, oldValue) {
           if (newValue !== oldValue) {
-            console.log('pickDate has been externally changed...: %O', ngModelController.$modelValue);
             ngModelController.$render();
           }
         }, true);
@@ -45,8 +44,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
       //we need to update the value for the angular side of thing, through ngModelController
       //aka this is updateAngularValue
       var _dateParser = function (viewValue) {
-
-        console.log('Parser called; directive -> angular');
 
         //initially we have to set the control to pristine; but only once
         //furthermore do not reflect the first update back...
@@ -131,7 +128,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
         //overwrite the $render method of ngModelController
         ngModelController.$render = function () {
 
-          console.log('angular -> directive');
 
           //we get called, whenever the external model changes...
           //copy it to internal date;
