@@ -7,9 +7,9 @@ angular.module('pickadateExample', ['zalari.pickadate.datepicker', 'zalari.picka
     };
   })
   .controller('testController2', function ($scope) {
-    $scope.startDate = '2014-02-24 12:00:00';
-    $scope.endDate = '2014-02-27 12:00:00';
+    $scope.startDate = new Date('2014-02-24 12:00:00');
+    $scope.endDate = new Date('2014-02-27 12:00:00');
   })
   .controller('testController3', function ($scope) {
-    $scope.curDate = '2014-02-24 12:00:00';
+    $scope.curDate = new Date('2014-02-24 12:00:00');
   });
