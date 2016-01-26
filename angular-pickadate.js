@@ -1,4 +1,3 @@
-// pick-a-date (attribute)
 angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', function () {
   return {
     restrict: 'E',
@@ -83,9 +82,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
           //set handler; a date has been selected for the datepicker
           onSet: function (e) {
 
-            //we do not use this hook anymore, because the parser pipeline
-            //is invoked, whenever the value of the input itself is changed
-
             // we are coming from $watch or link setup; so exit
             //TODO: figure out, why onSet is triggered during those phases
             if (scope.$$phase || scope.$root.$$phase) {
@@ -94,8 +90,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
             var pickerDate = element.pickadate('picker').get('select');
             ngModelController.$setViewValue(pickerDate);
-            scope.$apply();
-
           },
 
           //close handler
@@ -109,10 +103,10 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
       };
 
       //helper for angular -> datepicker
-      var _updatePickerValue = function (newValue) {
-        if (newValue) {
+      var _updatePickerValue = function (dateObj) {
+        if (dateObj) {
           // needs to be in milliseconds
-          element.pickadate('picker').set('select', newValue.getTime());
+          element.pickadate('picker').set('select', dateObj.getTime());
         } else {
           element.pickadate('picker').clear();
         }
@@ -121,13 +115,12 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
       var _init = function () {
 
+        //the current element is the input "below" the enclosing directive element
         element = element.find('input');
         _setupPicker();
 
-
         //overwrite the $render method of ngModelController
         ngModelController.$render = function () {
-
 
           //we get called, whenever the external model changes...
           //copy it to internal date;
@@ -158,7 +151,6 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
   };
 });
 
-// pick-a-time (attribute)
 angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function () {
   return {
     template: '<input type="text" />',
@@ -202,9 +194,6 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
         var options = angular.extend(scope.zaPickATimeOptions || {}, {
           onSet: function (e) {
 
-            //we do not use this hook anymore, because the parser pipeline
-            //is invoked, whenever the value of the input itself is changed
-
             // we are coming from $watch or link setup; so exit
             //TODO: figure out, why onSet is triggered during those phases
             if (scope.$$phase || scope.$root.$$phase) {
@@ -225,18 +214,18 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
 
       };
 
-      var _updatePickerValue = function (newValue) {
-        if (newValue) {
+      var _updatePickerValue = function (dateObj) {
+        if (dateObj) {
           // needs to be in minutes
-          var totalMins = newValue.getHours() * 60 + newValue.getMinutes();
+          var totalMins = dateObj.getHours() * 60 + dateObj.getMinutes();
           element.pickatime('picker').set('select', totalMins);
         } else {
           element.pickatime('picker').clear();
         }
       };
 
-      //parser for parsing the timestring "04:00" to actually set the ngModel
       //to propagate changes back to angular...
+      // directive->angular
       var _timeParser = function (viewValue) {
 
         //initially we have to set the control to pristine; but only once
@@ -245,9 +234,8 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
           _initial = false;
         }
 
-        //we get the new viewValue and we need to convert it to the real js date back...
-        //if the viewValue is empty, we assume, that date needs to be cleared
-        if (viewValue.length === 0) {
+        //if the viewValue is null, we assume, that date needs to be cleared
+        if (viewValue === null) {
           return null;
         } else {
 
@@ -267,10 +255,10 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
 
       var _init = function () {
 
+        //the actual element is the input "below" the directive
         element = element.find('input');
         _setupTimePicker();
 
-        //we need to overwrite the ngModel.Render to make it work...
 
         ngModelController.$render = function () {
           //we get called, whenever the external model changes...
@@ -278,8 +266,6 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
           //because in Angular 1.3+ $viewValue are always strings
           //-> https://github.com/angular/angular.js/commit/1eda18365a348c9597aafba9d195d345e4f13d1e
           //-> https://github.com/angular-ui/bootstrap/issues/2659
-          //we need to actually re-create a real Date; when it is null / undefined, let it be undefined / null
-          //_internalDate = (ngModelController.$viewValue ? new Date(ngModelController.$viewValue) : undefined);
           _internalDate = ngModelController.$modelValue;
           _updatePickerValue(_internalDate);
 
