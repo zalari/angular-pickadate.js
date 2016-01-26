@@ -162,7 +162,7 @@ angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', funct
       zaMaxTime: '=',
       zaDisabledTimes: '=',
       pickTime: '=ngModel',
-      placeholde: '@'
+      placeholder: '@'
     },
     require: 'ngModel',
     link: function (scope, element, attrs, ngModelController) {

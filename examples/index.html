@@ -20,7 +20,7 @@
 <div ng-controller="testController">
 	Date: <za-pick-a-date placeholder="Enter me" ng-model="curDate" ng-required="true"></za-pick-a-date><br/>
 	Date_2: <za-pick-a-date ng-model="curDate"></za-pick-a-date><br/>
-	Time: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
+	Time: <za-pick-a-time placeholder="Enter me2" ng-model="curDate"></za-pick-a-time><br/>
 	Time_2: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
 	<!--Time: <input type="text" za-pick-a-time="curDate" /><br/>-->
 	Result: <span>{{ curDate | date:'medium' }}</span><br/>
