@@ -2,7 +2,7 @@
 angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', function () {
   return {
     restrict: 'E',
-    template: '<input type="text" ng-model="pickdate" />',
+    template: '<input type="text" />',
     scope: {
       zaMinDate: '=',
       zaMaxDate: '=',
@@ -29,6 +29,9 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
             element.pickadate('picker').set('max', newValue ? newValue : false);
           }
         }, true);
+
+
+
       };
 
       //we need to update the value for the angular side of thing, through ngModelController
@@ -47,7 +50,7 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
         //we get the new viewValue and we need to convert it to the real js date back...
         //if the viewValue is empty, we assume, that date needs to be cleared
-        if (viewValue.length === 0) {
+        if (viewValue === null) {
           return null;
         } else {
 
@@ -57,9 +60,9 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
             _internalDate = new Date();
           }
 
-          _internalDate.setYear(viewValue.getFullYear());
-          _internalDate.setMonth(viewValue.getMonth());
-          _internalDate.setDate(viewValue.getDate());
+          _internalDate.setYear(viewValue.obj.getFullYear());
+          _internalDate.setMonth(viewValue.obj.getMonth());
+          _internalDate.setDate(viewValue.obj.getDate());
 
           return _internalDate;
         }
@@ -84,8 +87,9 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
               return;
             }
 
-            var pickerDate = element.pickadate('picker').get('select').obj;
+            var pickerDate = element.pickadate('picker').get('select');
             ngModelController.$setViewValue(pickerDate);
+            scope.$apply();
 
           },
 
@@ -118,14 +122,17 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 
         //overwrite the $render method of ngModelController
         ngModelController.$render = function () {
+
+          console.log('angular -> directive');
+
           //we get called, whenever the external model changes...
           //copy it to internal date;
           //because in Angular 1.3+ $viewValue are always strings
           //-> https://github.com/angular/angular.js/commit/1eda18365a348c9597aafba9d195d345e4f13d1e
           //-> https://github.com/angular-ui/bootstrap/issues/2659
           //we need to actually re-create a real Date; when it is null / undefined, let it be undefined / null
-          _internalDate = (ngModelController.$viewValue ? new Date(ngModelController.$viewValue) : undefined);
-          //_internalDate = ngModelController.$modelValue;
+          //_internalDate = (ngModelController.$viewValue ? new Date(ngModelController.$viewValue) : undefined);
+          _internalDate = ngModelController.$modelValue;
           _updatePickerValue(_internalDate);
         };
 
@@ -150,7 +157,7 @@ angular.module('zalari.pickadate.datepicker', []).directive('zaPickADate', funct
 // pick-a-time (attribute)
 angular.module('zalari.pickadate.timepicker', []).directive('zaPickATime', function () {
   return {
-    template: '<input type="text" ng-model="picktime" />',
+    template: '<input type="text" />',
     restrict: 'E',
     scope: {
       zaPickATimeOptions: '=',

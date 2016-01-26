@@ -17,10 +17,11 @@
 </head>
 <body ng-app="pickadateExample">
 <h1>Pick date and time</h1>
+<form name="testForm">
 <div ng-controller="testController">
 	Date: <za-pick-a-date ng-model="curDate"></za-pick-a-date><br/>
 	Date_2: <za-pick-a-date ng-model="curDate"></za-pick-a-date><br/>
-	Time: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
+	<!--Time: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>-->
 	<!--Time: <input type="text" za-pick-a-time="curDate" /><br/>-->
 	Result: <span>{{ curDate | date:'medium' }}</span><br/>
 	Set externally:
@@ -28,7 +29,11 @@
 	<!--<a href="javascript:void(0)" ng-click="curDate='2014-01-20T12:00:00Z';" >Jan20-noon-UTC</a> |-->
 	<a href="javascript:void(0)" ng-click="curDate=newDate();" >newDate()</a> |
 	<!--<a href="javascript:void(0)" ng-click="curDate=null;" >null</a>-->
+    <pre>
+        testForm : {{testForm|json}}
+    </pre>
 </div>
+</form>
 <!--<h1>Test min and max</h1>-->
 <!--<div ng-controller="testController2">-->
 	<!--From: <input type="text" za-pick-a-date="startDate" max-date="endDate" />-->

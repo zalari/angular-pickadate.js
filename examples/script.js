@@ -1,7 +1,7 @@
 'use strict';
 angular.module('pickadateExample', ['zalari.pickadate.datepicker', 'zalari.pickadate.timepicker'])
   .controller('testController', function ($scope) {
-    $scope.curDate = {};
+    $scope.curDate = undefined;
     $scope.newDate = function () {
       return new Date();
     };
