@@ -19,13 +19,13 @@ angular
 You can use it like that:
 
 
-    <za-pick-a-date ng-model="curDate" />
-    <za-pick-a-time ng-model="curDate" />
+    <input za-pick-a-date ng-model="curDate" />
+    <input za-pick-a-time ng-model="curDate" />
 
 Additionaly zaMinDate, zaMaxDate for the datepicker and minTime, zaMaxTime, zaDisabledTimes and the options as well are supported! The directives are ngModelController-aware and thus, ng-required & Co. work as well.
 
-    From: <za-pick-a-date ng-model="startDate" za-max-date="endDate" />
-    To: <za-pick-a-date ng-model="endDate" za-min-date="startDate" />
+    From: <input za-pick-a-date ng-model="startDate" za-max-date="endDate" />
+    To: <input za-pick-a-date ng-model="endDate" za-min-date="startDate" />
     
 
 ### Options
@@ -37,7 +37,7 @@ For the pick-a-time directive use `za-pick-a-time-options`.
 Pass in an Object { ... } with all the options you can think of. They will be passed to the directive.
 Example:
 
-    <za-pick-a-date="curDate" za-pick-a-date-options="{ format: 'dd/mm/yy', selectYears: true }" />
+    <input za-pick-a-date ng-model="curDate" za-pick-a-date-options="{ format: 'dd/mm/yy', selectYears: true }" />
 
 
 ### Examples
@@ -51,7 +51,7 @@ You can view the included [examples](./examples) after running;
 
 ### Notes
 
- - Version 0.5.0+ breaks everything again (you have to use ng-model now!) and enables AngularJS 1.3+ usage; you have to explicitly load this module now:
+ - Version 0.6.0+ breaks everything again (you have to use ng-model now!) and enables AngularJS 1.3+ usage; you have to explicitly load this module now:
     angular.module(yourModule,['zalari.pickadate.datepicker','zalari.pickadate.timepicker'])
  - For more information on the date filter in AngularJS please visit [http://docs.angularjs.org/api/ng/filter/date].
  - Documentation needs an overhaul... bear with me!

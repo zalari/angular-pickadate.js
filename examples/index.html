@@ -10,7 +10,6 @@
 	<script type="text/javascript" src="../node_modules/pickadate/lib/picker.js"></script>
     <script type="text/javascript" src="../node_modules/pickadate/lib/picker.date.js"></script>
     <script type="text/javascript" src="../node_modules/pickadate/lib/picker.time.js"></script>
-	<script type="text/javascript" src="date.js"></script>
 	<script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
 	<script type="text/javascript" src="script.js"></script>
 	<script type="text/javascript" src="../angular-pickadate.js"></script>
@@ -19,11 +18,9 @@
 <h1>Pick date and time on the same ng-model and ng-required</h1>
 <form name="testForm">
 <div ng-controller="testController">
-	Date: <za-pick-a-date ng-model="curDate" ng-required="true"></za-pick-a-date><br/>
-	Date_2: <za-pick-a-date ng-model="curDate"></za-pick-a-date><br/>
-	Time: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
-	Time_2: <za-pick-a-time ng-model="curDate"></za-pick-a-time><br/>
-	<!--Time: <input type="text" za-pick-a-time="curDate" /><br/>-->
+	Date: <input za-pick-a-date placeholder="Enter me" type="text" ng-model="curDate" name="first" ng-required="true"/><br/>
+	Date_2: <input za-pick-a-date ng-model="curDate" type="text" /><br/>
+	Time: <input type="text" za-pick-a-time ng-model="curDate" /><br/>
 	Result: <span>{{ curDate | date:'medium' }}</span><br/>
 	Set externally:
 	<!--<a href="javascript:void(0)" ng-click="curDate='2014-01-20 12:00:00';" >Jan20-noon</a> |-->
@@ -37,17 +34,17 @@
 </form>
 <h1>Test min and max</h1>
 <div ng-controller="testController2">
-    From: <za-pick-a-date ng-model="startDate" za-max-date="endDate"></za-pick-a-date>
-	@ <za-pick-a-time ng-model="startDate"></za-pick-a-time><br/>
-	To: <za-pick-a-date ng-model="endDate" za-min-date="startDate"></za-pick-a-date>
-    @ <za-pick-a-time ng-model="endDate"></za-pick-a-time><br/>
+    From: <input za-pick-a-date ng-model="startDate" za-max-date="endDate"/>
+	@ <input za-pick-a-time ng-model="startDate"/><br/>
+	To: <input za-pick-a-date ng-model="endDate" za-min-date="startDate"/>
+    @ <input za-pick-a-time ng-model="endDate"/><br/>
 </div>
 <h1>Options</h1>
 <div ng-controller="testController3">
 	Date:
-    <za-pick-a-date ng-model="curDate" za-pick-a-date-options="{ format: 'mm/dd/yy', selectYears: true }"></za-pick-a-date><br/>
+    <input za-pick-a-date ng-model="curDate" za-pick-a-date-options="{ format: 'mm/dd/yy', selectYears: true }"><br/>
     Time:
-    <za-pick-a-time ng-model="curDate" za-pick-a-time-options="{ format: 'HH:i'}"></za-pick-a-time><br/>
+    <input za-pick-a-time ng-model="curDate" za-pick-a-time-options="{ format: 'HH:i'}"><br/>
 	Result: <span>{{ curDate | date:'medium' }}</span><br/>
 </div>
 </body>
